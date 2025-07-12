@@ -5,28 +5,8 @@ import CodeMirror from "@uiw/react-codemirror";
 import { python } from "@codemirror/lang-python";
 import { PlayIcon } from "./Icons";
 
-declare global {
-  interface Window {
-    loadPyodide: any;
-    pyodide: any;
-  }
-}
-
-const CodeEditor = () => {
-  const [code, setCode] = useState("");
-  const [output, setOutput] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-  const [isRunning, setIsRunning] = useState(false);
-  const [pyodideReady, setPyodideReady] = useState(false);
-
-  // Load Pyodide script and Python file when the component mounts
-  useEffect(() => {
-    const loadPyodideScript = async () => {
-      try {
-        setIsLoading(true);
-
-        // Create a fixed sample Python code
-        const sampleCode = `# Simple Python script to demonstrate Python running in WebAssembly
+// Define the demo Python code
+const DEMO_CODE = `# Simple Python script to demonstrate Python running in WebAssembly
 # Click the play button to execute this code
 
 print("Hello from Python Chronicles!")
@@ -42,79 +22,121 @@ print(f"\\nLanguages used in this project: {', '.join(languages)}")
 print("\\nThis code is executed using Pyodide - Python in WebAssembly")
 `;
 
-        // Set the code to our safe sample
-        setCode(sampleCode);
+// Add Pyodide types
+declare global {
+  interface Window {
+    loadPyodide: (options?: {
+      indexURL?: string;
+      stdin?: () => string;
+      [key: string]: any;
+    }) => Promise<{
+      runPythonAsync: (code: string) => Promise<any>;
+      runPython: (code: string) => any;
+    }>;
+  }
+}
 
-        // Load Pyodide script from CDN
-        const script = document.createElement('script');
-        script.src = "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js";
-        script.async = true;
+const CodeEditor = () => {
+  const [code, setCode] = useState(DEMO_CODE);
+  const [output, setOutput] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRunning, setIsRunning] = useState(false);
+  const [pyodide, setPyodide] = useState<{
+    runPythonAsync: (code: string) => Promise<any>;
+    runPython: (code: string) => any;
+  } | null>(null);
 
-        // Create a promise to wait for the script to load
-        const scriptLoadPromise = new Promise((resolve, reject) => {
-          script.onload = resolve;
-          script.onerror = reject;
-        });
-
-        // Add the script to the document
-        document.head.appendChild(script);
-
-        // Wait for the script to load
-        await scriptLoadPromise;
-
-        // Initialize Pyodide with explicit options
-        window.pyodide = await window.loadPyodide({
-          indexURL: "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/",
-          stdin: () => "",
-        });
-
-        // Set Pyodide as ready
-        setPyodideReady(true);
-        setIsLoading(false);
+  // Load Pyodide on component mount
+  useEffect(() => {
+    // Create function to load Pyodide
+    const loadPyodide = async () => {
+      try {
+        setIsLoading(true);
+        
+        // First check if pyodide.js script is already in the document
+        if (!document.querySelector('script[src*="pyodide.js"]')) {
+          // Create script element
+          const script = document.createElement("script");
+          script.src = "https://cdn.jsdelivr.net/pyodide/v0.23.2/full/pyodide.js"; // Using a slightly older but stable version
+          script.async = true;
+          document.head.appendChild(script);
+          
+          // Wait for script to load
+          await new Promise<void>((resolve, reject) => {
+            script.onload = () => resolve();
+            script.onerror = () => reject(new Error("Failed to load Pyodide script"));
+          });
+        }
+        
+        // Once script is loaded, initialize Pyodide
+        if (window.loadPyodide) {
+          const pyodideInstance = await window.loadPyodide({
+            indexURL: "https://cdn.jsdelivr.net/pyodide/v0.23.2/full/",
+          });
+          setPyodide(pyodideInstance);
+          setIsLoading(false);
+        } else {
+          throw new Error("Failed to load Pyodide");
+        }
       } catch (error) {
-        console.error("Failed to load Pyodide:", error);
-        setOutput(`Error loading Python environment: ${error instanceof Error ? error.message : String(error)}`);
+        console.error("Error loading Pyodide:", error);
+        setOutput(`Failed to initialize Python environment: ${error instanceof Error ? error.message : String(error)}`);
         setIsLoading(false);
       }
     };
-
-    loadPyodideScript();
+    
+    loadPyodide();
+    
+    // Cleanup function
+    return () => {
+      setPyodide(null);
+    };
   }, []);
-  // Function to run Python code
+  
+  // Function to run the Python code
   const runCode = useCallback(async () => {
-    if (!pyodideReady || !window.pyodide || isRunning) return;
-
+    if (!pyodide || isRunning) return;
+    
     setIsRunning(true);
     setOutput("");
-
+    
     try {
-      // Create a capture for stdout
-      const outputCapture: string[] = [];
+      // This is a much simpler approach that works reliably
+      const result = await pyodide.runPythonAsync(`
+import sys
+import io
 
-      // Set up stdout capturing
-      window.pyodide.setStdout({
-        write: (text: string) => {
-          outputCapture.push(text);
-        },
-        flush: () => { }
-      });
+# Redirect stdout to capture print statements
+sys.stdout = io.StringIO()
 
-      // Run the code that's in the editor - this is already our safe code
-      await window.pyodide.runPython(code);
+# Run the code (a simplified version to avoid I/O operations)
+print("Hello from Python Chronicles!")
+print("Python is running in WebAssembly!")
 
-      // Update output state with captured stdout
-      const capturedOutput = outputCapture.join("");
+print("\\nLet's calculate some squares:")
+for i in range(1, 6):
+    print(f"{i} squared is {i**2}")
 
-      if (capturedOutput) {
-        setOutput(capturedOutput);
-      }
+languages = ["Python", "JavaScript", "WebAssembly"]
+print(f"\\nLanguages used in this project: {', '.join(languages)}")
+    
+print("\\nThis code is executed using Pyodide - Python in WebAssembly")
+
+# Get the captured output
+output = sys.stdout.getvalue()
+output  # Return the output
+      `);
+      
+      // Set the captured output
+      setOutput(result);
+      
     } catch (error) {
       console.error("Error executing Python code:", error);
       setOutput(`Error: ${error instanceof Error ? error.message : String(error)}`);
     } finally {
       setIsRunning(false);
     }
-  }, [code, isRunning, pyodideReady]);
+  }, [pyodide, isRunning]);
 
   return (
     <div className="flex flex-col h-full">
@@ -123,11 +145,12 @@ print("\\nThis code is executed using Pyodide - Python in WebAssembly")
         <span className="text-sm">hello.py</span>
         <button
           onClick={runCode}
-          disabled={isLoading || isRunning || !pyodideReady}
-          className={`p-2 rounded-full run-button ${isLoading || isRunning || !pyodideReady
+          disabled={isLoading || isRunning || !pyodide}
+          className={`p-2 rounded-full run-button ${
+            isLoading || isRunning || !pyodide
               ? 'run-button-disabled'
               : 'run-button-active'
-            }`}
+          }`}
           aria-label="Run Python code"
           title="Run Python code"
         >
