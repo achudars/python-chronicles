@@ -1,0 +1,55 @@
+@import "tailwindcss";
+@import "./theme.css";
+
+:root {
+  /* New color palette based on the attached image */
+  --mint-light: #e6f1c7;
+  --mint-medium: #c0e6a9;
+  --teal-light: #69ccb4;
+  --teal-medium: #489e9d;
+  --teal-dark: #3b7b85;
+  --brown-light: #5e5256;
+  --brown-medium: #4f4346;
+  --brown-dark: #3e3537;
+  
+  /* Base theme colors */
+  --background: var(--mint-light);
+  --foreground: var(--brown-dark);
+  --header-bg: var(--teal-medium);
+  --header-text: white;
+  --editor-bg: var(--brown-dark);
+  --editor-text: white;
+  --button-primary: var(--teal-light);
+  --button-hover: var(--teal-medium);
+  --button-disabled: var(--brown-light);
+  --border-color: var(--teal-dark);
+  
+  /* Font variables */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: var(--brown-medium);
+    --foreground: white;
+    --header-bg: var(--teal-dark);
+    --editor-bg: var(--brown-dark);
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Add custom styles for the code editor */
+.cm-editor {
+  height: 100% !important;
+  font-family: monospace !important;
+}
+
+.cm-scroller {
+  overflow: auto !important;
+}
