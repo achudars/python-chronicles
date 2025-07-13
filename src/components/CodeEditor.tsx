@@ -8,7 +8,7 @@ import { PlayIcon } from "./Icons";
 // Add Pyodide types
 declare global {
   interface Window {
-    loadPyodide: (options?: {
+    loadPyodide?: (options?: {
       indexURL?: string;
       stdin?: () => string;
       [key: string]: unknown;
@@ -30,6 +30,7 @@ const CodeEditor = ({ currentFile = "hello.py" }: CodeEditorProps) => {
   const [isRunning, setIsRunning] = useState(false);
   const [isLoadingFile, setIsLoadingFile] = useState(false);
   const [viewMode, setViewMode] = useState<'source' | 'test'>('source');
+  const [loadingError, setLoadingError] = useState<string | null>(null);
   const [pyodide, setPyodide] = useState<{
     runPythonAsync: (code: string) => Promise<string>;
     runPython: (code: string) => string;
@@ -82,37 +83,81 @@ const CodeEditor = ({ currentFile = "hello.py" }: CodeEditorProps) => {
   useEffect(() => {
     // Create function to load Pyodide
     const loadPyodide = async () => {
+      const pyodideConfig = {
+        version: "v0.26.4",
+        url: "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/",
+        script: "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"
+      };
+
+      setLoadingError(null); // Clear any previous errors
+
       try {
         setIsLoading(true);
+        setOutput(`Loading Python environment (${pyodideConfig.version})...`);
 
-        // First check if pyodide.js script is already in the document
-        if (!document.querySelector('script[src*="pyodide.js"]')) {
-          // Create script element
-          const script = document.createElement("script");
-          script.src = "https://cdn.jsdelivr.net/pyodide/v0.23.2/full/pyodide.js"; // Using a slightly older but stable version
-          script.async = true;
-          document.head.appendChild(script);
-
-          // Wait for script to load
-          await new Promise<void>((resolve, reject) => {
-            script.onload = () => resolve();
-            script.onerror = () => reject(new Error("Failed to load Pyodide script"));
-          });
-        }
-
-        // Once script is loaded, initialize Pyodide
-        if (window.loadPyodide) {
-          const pyodideInstance = await window.loadPyodide({
-            indexURL: "https://cdn.jsdelivr.net/pyodide/v0.23.2/full/",
-          });
+        // Check if we already have a Pyodide script loaded
+        const existingScript = document.querySelector('script[src*="pyodide.js"]');
+        if (existingScript && window.loadPyodide) {
+          // Try to use the existing Pyodide
+          setOutput("Initializing existing Python environment...");
+          const pyodideInstance = await window.loadPyodide();
           setPyodide(pyodideInstance);
+          setOutput("Python environment ready! Click 'Run Code' to execute Python.");
           setIsLoading(false);
-        } else {
-          throw new Error("Failed to load Pyodide");
+          return;
         }
+
+        // Remove any existing pyodide scripts
+        document.querySelectorAll('script[src*="pyodide.js"]').forEach(s => s.remove());
+
+        // Load new Pyodide script
+        const script = document.createElement("script");
+        script.src = pyodideConfig.script;
+        script.async = true;
+        document.head.appendChild(script);
+
+        // Wait for script to load
+        await new Promise<void>((resolve, reject) => {
+          const timeout = setTimeout(() => {
+            reject(new Error(`Pyodide ${pyodideConfig.version} script loading timed out`));
+          }, 15000);
+
+          script.onload = () => {
+            clearTimeout(timeout);
+            resolve();
+          };
+          script.onerror = () => {
+            clearTimeout(timeout);
+            reject(new Error(`Failed to load Pyodide ${pyodideConfig.version} script`));
+          };
+        });
+
+        // Wait for loadPyodide to be available
+        let attempts = 0;
+        while (!window.loadPyodide && attempts < 50) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          attempts++;
+        }
+
+        if (!window.loadPyodide) {
+          throw new Error(`Pyodide ${pyodideConfig.version} loadPyodide function not available`);
+        }
+
+        // Initialize Pyodide
+        setOutput(`Initializing Python environment (${pyodideConfig.version})...`);
+        const pyodideInstance = await window.loadPyodide({
+          indexURL: pyodideConfig.url,
+        });
+
+        setPyodide(pyodideInstance);
+        setOutput(`Python environment ready (${pyodideConfig.version})! Click 'Run Code' to execute Python.`);
+        setIsLoading(false);
+
       } catch (error) {
-        console.error("Error loading Pyodide:", error);
-        setOutput(`Failed to initialize Python environment: ${error instanceof Error ? error.message : String(error)}`);
+        console.error(`Error loading Pyodide ${pyodideConfig.version}:`, error);
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        setLoadingError(errorMessage);
+        setOutput(`Failed to initialize Python environment.\n\nError: ${errorMessage}\n\nPlease check your internet connection and try again.`);
         setIsLoading(false);
       }
     };
@@ -123,6 +168,20 @@ const CodeEditor = ({ currentFile = "hello.py" }: CodeEditorProps) => {
     return () => {
       setPyodide(null);
     };
+  }, []);
+
+  // Function to retry loading Pyodide
+  const retryLoadPyodide = useCallback(() => {
+    setLoadingError(null);
+    setPyodide(null);
+    setIsLoading(true);
+    setOutput("Retrying Python environment initialization...");
+    
+    // Remove any existing pyodide scripts
+    document.querySelectorAll('script[src*="pyodide.js"]').forEach(s => s.remove());
+    
+    // Reload the page to retry
+    window.location.reload();
   }, []);
 
   // Function to run the Python code
@@ -231,8 +290,13 @@ output  # Return the output
       {/* Code editor */}
       <div className="flex-1 overflow-hidden max-h-[500px]">
         {isLoading || isLoadingFile ? (
-          <div className="loading-container h-full flex items-center justify-center">
-            {isLoading ? "Loading Python environment..." : "Loading file..."}
+          <div className="loading-container h-full flex flex-col items-center justify-center">
+            <div className="text-center">
+              <div className="inline-block w-8 h-8 border-4 border-blue-400 border-t-transparent rounded-full animate-spin mb-3"></div>
+              <div className="text-sm">
+                {isLoading ? output || "Loading Python environment..." : "Loading file..."}
+              </div>
+            </div>
           </div>
         ) : (
           <div className="custom-scrollbar overflow-y-auto overflow-x-hidden h-full">
@@ -279,6 +343,16 @@ output  # Return the output
             return output || "Run the code to see the output";
           })()}
         </pre>
+        {loadingError && !isLoading && (
+          <div className="mt-3 pt-3 border-t border-gray-600">
+            <button
+              onClick={retryLoadPyodide}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors"
+            >
+              Retry Loading Python
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
