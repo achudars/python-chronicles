@@ -4,10 +4,10 @@ import path from 'path';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { path: string[] } }
+  { params }: { params: Promise<{ path: string[] }> }
 ) {
   try {
-    const pathSegments = params.path;
+    const { path: pathSegments } = await params;
     
     if (!pathSegments || pathSegments.length === 0) {
       return NextResponse.json({ error: 'Invalid path' }, { status: 400 });

@@ -11,10 +11,10 @@ declare global {
     loadPyodide: (options?: {
       indexURL?: string;
       stdin?: () => string;
-      [key: string]: any;
+      [key: string]: unknown;
     }) => Promise<{
-      runPythonAsync: (code: string) => Promise<any>;
-      runPython: (code: string) => any;
+      runPythonAsync: (code: string) => Promise<string>;
+      runPython: (code: string) => string;
     }>;
   }
 }
@@ -31,8 +31,8 @@ const CodeEditor = ({ currentFile = "hello.py" }: CodeEditorProps) => {
   const [isLoadingFile, setIsLoadingFile] = useState(false);
   const [viewMode, setViewMode] = useState<'source' | 'test'>('source');
   const [pyodide, setPyodide] = useState<{
-    runPythonAsync: (code: string) => Promise<any>;
-    runPython: (code: string) => any;
+    runPythonAsync: (code: string) => Promise<string>;
+    runPython: (code: string) => string;
   } | null>(null);
 
   // Function to get the appropriate filename based on view mode
