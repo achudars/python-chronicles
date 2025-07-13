@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen">
       {/* Sidebar */}
-      <div className="app-sidebar h-screen flex flex-col">
+      <div className="app-sidebar min-h-screen flex flex-col">
         {/* Navigation */}
         <nav className="flex-1 px-4 pt-6">
           <div className="mb-8">
