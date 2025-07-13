@@ -14,6 +14,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Python Chronicles",
   description: "Run Python code using WebAssembly in your browser",
+  icons: {
+    icon: [
+      { url: '/icon.svg', sizes: 'any', type: 'image/svg+xml' }
+    ],
+  },
 };
 
 export default function RootLayout({
