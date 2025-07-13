@@ -15,22 +15,21 @@ on:
 
 jobs:
   test-cross-platform:
-    name: Test on ${{ matrix.os }} with Python ${{ matrix.python-version }}
+    name: Test on ${{ matrix.os }} with Python 3.12
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false # Don't stop other jobs if one fails
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ["3.11", "3.12"]
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python 3.12
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.12"
 
       - name: Install dependencies
         run: |
@@ -83,5 +82,5 @@ jobs:
         run: |
           echo "🎉 Tests completed successfully!"
           echo "✅ Platform: ${{ matrix.os }}"
-          echo "✅ Python: ${{ matrix.python-version }}"
+          echo "✅ Python: 3.12"
           echo "🚀 All Python Chronicles tests passed!"

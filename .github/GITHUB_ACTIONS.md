@@ -7,15 +7,15 @@ This document outlines the automated testing and deployment pipeline configured 
 ### 1. `python-tests.yml` - Primary Python Testing
 
 - **Triggers**: Push/PR to main/develop branches, changes to Python files
-- **Python Versions**: 3.9, 3.10, 3.11, 3.12
+- **Python Version**: 3.12 (latest stable)
 - **Tests**: Runs all Python test suites
-- **Purpose**: Ensures Python code quality across multiple versions
+- **Purpose**: Ensures Python code quality on latest Python version
 
 ### 2. `ci-cd.yml` - Full CI/CD Pipeline
 
 - **Triggers**: Push/PR to main/develop branches
 - **Jobs**:
-  - Python tests (3.11, 3.12)
+  - Python tests (3.12)
   - Next.js build and lint
   - Deployment readiness check
 - **Purpose**: Complete application testing and deployment preparation
@@ -24,7 +24,7 @@ This document outlines the automated testing and deployment pipeline configured 
 
 - **Triggers**: Push/PR to main, weekly schedule
 - **Platforms**: Ubuntu, Windows, macOS
-- **Python Versions**: 3.11, 3.12
+- **Python Version**: 3.12
 - **Purpose**: Ensures compatibility across different operating systems
 
 ### 4. `security-checks.yml` - Security & Dependencies
@@ -68,7 +68,7 @@ The following badges are available in the README:
 
 All workflows must pass before deployment to production:
 
-1. ✅ **Python Tests**: All test suites pass on multiple Python versions
+1. ✅ **Python Tests**: All test suites pass on Python 3.12
 2. ✅ **Next.js Build**: Application builds successfully
 3. ✅ **Cross-Platform**: Tests pass on Ubuntu, Windows, and macOS
 4. ✅ **Security**: No high-severity security issues detected
