@@ -212,7 +212,7 @@ output  # Return the output
       {/* Output console */}
       <div className="output-console h-1/4 min-h-[100px] border-t p-3 text-gray-300 font-mono overflow-y-auto console-bg">
         <div className="flex items-center justify-between mb-2">
-          <div className="text-xs text-green-400 font-medium">Console Output</div>
+          <div className="text-xs console-output-text font-medium">Console Output</div>
           <div className="text-xs text-gray-400">
             {isRunning && (
               <span className="inline-block w-2 h-2 bg-green-400 rounded-full mr-1 animate-pulse"></span>

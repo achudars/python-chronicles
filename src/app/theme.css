@@ -162,6 +162,10 @@
   background-color: var(--dark-panel) !important;
 }
 
+.console-output-text {
+  color: var(--accent-orange);
+}
+
 .badge {
   background-color: var(--accent-orange);
   color: var(--white);
