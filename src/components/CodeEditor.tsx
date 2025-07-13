@@ -176,10 +176,10 @@ const CodeEditor = ({ currentFile = "hello.py" }: CodeEditorProps) => {
     setPyodide(null);
     setIsLoading(true);
     setOutput("Retrying Python environment initialization...");
-    
+
     // Remove any existing pyodide scripts
     document.querySelectorAll('script[src*="pyodide.js"]').forEach(s => s.remove());
-    
+
     // Reload the page to retry
     window.location.reload();
   }, []);

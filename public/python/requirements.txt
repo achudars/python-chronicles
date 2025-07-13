@@ -1,0 +1,8 @@
+# Python Chronicles - Python Dependencies
+# Currently no external dependencies required
+# All tests use only Python standard library
+
+# Future dependencies can be added here:
+# pytest>=7.0.0  # For more advanced testing
+# numpy>=1.21.0  # For numerical computing
+# pandas>=1.3.0  # For data analysis

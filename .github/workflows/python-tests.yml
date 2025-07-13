@@ -1,0 +1,71 @@
+name: Python Tests
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "public/python/**"
+      - ".github/workflows/python-tests.yml"
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - "public/python/**"
+      - ".github/workflows/python-tests.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # Install any additional dependencies if needed
+          # pip install -r requirements.txt  # Uncomment if you have requirements.txt
+
+      - name: Run Python tests
+        run: |
+          cd public/python
+          python tests/run_all_tests.py
+
+      - name: Run individual test files
+        run: |
+          cd public/python
+          echo "Running test_hello.py..."
+          python -c "
+          import sys
+          sys.path.insert(0, 'src')
+          sys.path.insert(0, 'tests')
+          from test_hello import test_hello_output, test_square_calculation
+          test_hello_output()
+          test_square_calculation()
+          print('✅ test_hello.py passed')
+          "
+
+          echo "Running test_add.py..."
+          python -c "
+          import sys
+          sys.path.insert(0, 'src')
+          sys.path.insert(0, 'tests')
+          from test_add import test_add_numbers_function, test_sum_function, test_add_output
+          test_add_numbers_function()
+          test_sum_function()
+          test_add_output()
+          print('✅ test_add.py passed')
+          "
+
+      - name: Test summary
+        run: |
+          echo "🎉 All Python tests completed successfully!"
+          echo "✅ Tests passed for Python ${{ matrix.python-version }}"

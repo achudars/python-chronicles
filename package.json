@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "cd public/python && python tests/run_all_tests.py",
+    "test:python": "cd public/python && python tests/run_all_tests.py"
   },
   "dependencies": {
     "@codemirror/lang-python": "^6.2.1",
