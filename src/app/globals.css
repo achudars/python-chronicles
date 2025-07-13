@@ -2,30 +2,36 @@
 @import "./theme.css";
 
 :root {
-  /* New color palette based on the attached image */
-  --mint-light: #e6f1c7;
-  --mint-medium: #c0e6a9;
-  --teal-light: #69ccb4;
-  --teal-medium: #489e9d;
-  --teal-dark: #3b7b85;
-  --brown-light: #5e5256;
-  --brown-medium: #4f4346;
-  --brown-dark: #3e3537;
+  /* New color palette based on the dashboard image */
+  --dark-green: #124734;
+  --medium-green: #1b5e45;
+  --light-green: #246e52;
+  --accent-green: #35a77c;
+  --accent-orange: #ff855a;
+  --white: #ffffff;
+  --off-white: #f8f9fa;
+  --light-gray: #e9ecef;
+  --medium-gray: #ced4da;
+  --dark-gray: #495057;
+  --code-bg: #2d2d2d;
+  --dark-panel: #3a3f47;
+  --console-bg: #2c313a;
   
   /* Base theme colors */
-  --background: var(--mint-light);
-  --foreground: var(--brown-dark);
-  --header-bg: var(--teal-medium);
-  --header-text: white;
-  --editor-bg: var(--brown-dark);
-  --editor-text: white;
-  --button-primary: var(--teal-light);
-  --button-hover: var(--teal-medium);
-  --button-disabled: var(--brown-light);
-  --border-color: var(--teal-dark);
+  --background: var(--dark-green);
+  --sidebar-bg: var(--medium-green);
+  --foreground: var(--white);
+  --header-bg: var(--medium-green);
+  --header-text: var(--white);
+  --editor-bg: var(--dark-panel);
+  --editor-text: var(--white);
+  --button-primary: var(--accent-green);
+  --button-hover: var(--accent-orange);
+  --button-disabled: var(--medium-gray);
+  --border-color: var(--light-green);
   
   /* Font variables */
-  --font-sans: var(--font-geist-sans);
+  --font-sans: 'Noto Sans Devanagari', sans-serif, Helvetica, Arial;
   --font-mono: var(--font-geist-mono);
 }
 
@@ -41,7 +47,12 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Noto Sans Devanagari', sans-serif, Helvetica, Arial;
+}
+
+/* Specific class for Noto Sans font */
+.font-noto {
+  font-family: 'Noto Sans Devanagari', sans-serif, Helvetica, Arial;
 }
 
 /* Add custom styles for the code editor */

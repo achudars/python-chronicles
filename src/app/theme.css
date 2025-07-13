@@ -1,13 +1,103 @@
 /* Custom theme classes for Python Chronicles */
 
 .app-header {
-  background-color: var(--header-bg);
+  background-color: var(--sidebar-bg);
   color: var(--header-text);
+  border-bottom: 1px solid var(--light-green);
+}
+
+.app-sidebar {
+  background-color: var(--sidebar-bg);
+  color: var(--white);
+  width: 240px;
+  min-width: 240px;
+}
+
+.sidebar-icon {
+  color: var(--white);
+  opacity: 0.85;
+}
+
+.sidebar-icon.active {
+  color: var(--white);
+  opacity: 1;
+}
+
+.sidebar-menu-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-radius: 0.25rem;
+  margin: 0.25rem 0;
+  transition: background-color 0.2s;
+}
+
+.sidebar-menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-menu-item.active {
+  background-color: var(--accent-green);
+}
+
+/* New rounded menu items */
+.sidebar-menu-item-rounded {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--white);
+  cursor: pointer;
+}
+
+.sidebar-menu-item-rounded:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-menu-item-rounded.active {
+  background-color: var(--accent-green);
+  border-radius: 0.5rem;
+}
+
+/* Stage items styling */
+.stage-item {
+  display: flex;
+  align-items: center;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  color: var(--white);
+  justify-content: space-between;
+}
+
+.stage-text {
+  font-weight: 400;
+  flex: 1;
+}
+
+.stage-number {
+  font-weight: 500;
+  margin-left: auto;
+  margin-right: 0.5rem;
+}
+
+.badge-orange {
+  background-color: var(--accent-orange);
+  color: var(--white);
+  border-radius: 9999px;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  min-width: 1.5rem;
+  text-align: center;
 }
 
 .share-button {
-  background-color: var(--teal-light);
-  color: var(--brown-dark);
+  background-color: var(--accent-orange);
+  color: var(--white);
+  font-weight: 500;
 }
 
 .share-button:hover {
@@ -15,19 +105,18 @@
 }
 
 .content-panel {
-  background-color: var(--background);
-  color: var(--foreground);
-  border-color: var(--border-color);
+  background-color: var(--off-white);
+  color: var(--dark-gray);
 }
 
 .editor-panel {
-  background-color: var(--editor-bg);
+  background-color: var(--dark-panel);
   color: var(--editor-text);
 }
 
 .editor-header {
-  background-color: var(--teal-dark);
-  border-color: var(--brown-light);
+  background-color: var(--dark-panel);
+  border-bottom: 1px solid var(--light-green);
 }
 
 .run-button {
@@ -39,16 +128,78 @@
   background-color: var(--button-primary);
 }
 
+.run-button-active:hover {
+  background-color: var(--accent-orange);
+}
+
 .run-button-disabled {
   background-color: var(--button-disabled);
 }
 
 .loading-container {
-  background-color: var(--brown-medium);
-  color: var(--teal-light);
+  background-color: var(--dark-panel);
+  color: var(--medium-gray);
+}
+
+.console-bg {
+  background-color: var(--console-bg);
+}
+
+/* CodeMirror editor styling */
+.cm-editor {
+  background-color: var(--dark-panel) !important;
+}
+
+.cm-editor .cm-focused {
+  background-color: var(--dark-panel) !important;
+}
+
+.cm-editor .cm-scroller {
+  background-color: var(--dark-panel) !important;
+}
+
+.cm-editor .cm-content {
+  background-color: var(--dark-panel) !important;
+}
+
+.badge {
+  background-color: var(--accent-orange);
+  color: var(--white);
+  border-radius: 9999px;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.progress-bar {
+  background-color: var(--accent-green);
+  width: 60%;
+}
+
+/* Animation for loading states */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-pulse {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Card style for content panels */
+.card {
+  background-color: var(--white);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 .output-console {
-  background-color: var(--brown-medium);
-  border-color: var(--brown-light);
+  background-color: var(--console-bg);
+  border-color: var(--light-green);
 }

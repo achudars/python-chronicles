@@ -1,0 +1,27 @@
+/* Fallback font styles */
+/* This file ensures the app works even before adding the actual SF Pro font files */
+
+:root {
+  /* Font variables */
+  --font-sf-pro: 'Noto Sans Devanagari', sans-serif, Helvetica, Arial, -apple-system;
+  --font-sf-mono: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+/* These will be overridden when the actual fonts are added */
+body {
+  font-family: var(--font-sf-pro);
+}
+
+.cm-editor {
+  font-family: var(--font-sf-mono) !important;
+}
+
+/* Use Noto Sans Devanagari for smaller UI elements */
+.text-sm, .text-xs {
+  font-family: 'Noto Sans Devanagari', sans-serif, Helvetica, Arial;
+}
+
+/* Use SF Mono for console output */
+.output-console pre {
+  font-family: var(--font-sf-mono);
+}
