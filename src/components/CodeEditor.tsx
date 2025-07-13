@@ -43,7 +43,6 @@ const CodeEditor = ({ currentFile = "hello.py" }: CodeEditorProps) => {
     }
     return baseFile;
   }, []);
-
   // Function to load file content
   const loadFileContent = useCallback(async (filename: string, mode: 'source' | 'test') => {
     setIsLoadingFile(true);
@@ -52,12 +51,13 @@ const CodeEditor = ({ currentFile = "hello.py" }: CodeEditorProps) => {
 
     try {
       const response = await fetch(`/api/python/${apiPath}`);
+
       if (response.ok) {
         const content = await response.text();
         setCode(content);
       } else {
-        console.error(`Failed to load ${actualFileName}`);
-        setCode(`# Error: Could not load ${actualFileName}`);
+        console.error(`Failed to load ${actualFileName}:`, response.status);
+        setCode(`# Error: Could not load ${actualFileName} (${response.status})`);
       }
     } catch (error) {
       console.error(`Error loading ${actualFileName}:`, error);
