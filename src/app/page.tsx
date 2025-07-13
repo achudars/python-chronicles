@@ -22,7 +22,7 @@ export default function Home() {
       if (response.ok) {
         const data = await response.json();
         setPythonFiles(data.files || ["hello.py", "add.py"]);
-        
+
         // Ensure activeTab is valid, default to first file (should be hello.py)
         if (data.files && data.files.length > 0 && !data.files.includes(activeTab)) {
           setActiveTab(data.files[0]);
