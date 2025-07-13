@@ -1,7 +1,5 @@
 # Simple Python script to demonstrate Python running in WebAssembly
-# This code will be displayed in the editor but not actually executed
-
-# Instead, we'll run a simplified version to avoid any potential issues
+# Click the play button to execute this code
 
 print("Hello from Python Chronicles!")
 print("Python is running in WebAssembly!")

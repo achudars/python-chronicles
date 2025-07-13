@@ -5,60 +5,6 @@ import CodeMirror from "@uiw/react-codemirror";
 import { python } from "@codemirror/lang-python";
 import { PlayIcon } from "./Icons";
 
-// Define the demo Python code for hello.py
-const HELLO_PY_CODE = `# Simple Python script to demonstrate Python running in WebAssembly
-# Click the play button to execute this code
-
-print("Hello from Python Chronicles!")
-print("Python is running in WebAssembly!")
-
-print("\\nLet's calculate some squares:")
-for i in range(1, 6):
-    print(f"{i} squared is {i**2}")
-
-languages = ["Python", "JavaScript", "WebAssembly"]
-print(f"\\nLanguages used in this project: {', '.join(languages)}")
-    
-print("\\nThis code is executed using Pyodide - Python in WebAssembly")
-`;
-
-// Define the code for add.py
-const ADD_PY_CODE = `# Simple Python script to demonstrate adding two numbers
-# Click the play button to execute this code
-
-print("Welcome to the Addition Calculator!")
-print("This script demonstrates basic addition in Python")
-
-# Define two numbers
-num1 = 15
-num2 = 27
-
-# Calculate the sum
-result = num1 + num2
-
-print(f"\\nFirst number: {num1}")
-print(f"Second number: {num2}")
-print(f"Sum: {num1} + {num2} = {result}")
-
-# Let's try with different numbers
-numbers = [5, 10, 3, 8, 12]
-total = sum(numbers)
-
-print(f"\\nAdding a list of numbers: {numbers}")
-print(f"Total sum: {total}")
-
-# Function to add two numbers
-def add_numbers(a, b):
-    return a + b
-
-# Test the function
-x, y = 100, 250
-function_result = add_numbers(x, y)
-print(f"\\nUsing a function: add_numbers({x}, {y}) = {function_result}")
-
-print("\\nThis demonstrates basic addition operations in Python!")
-`;
-
 // Add Pyodide types
 declare global {
   interface Window {
@@ -78,31 +24,41 @@ interface CodeEditorProps {
 }
 
 const CodeEditor = ({ currentFile = "hello.py" }: CodeEditorProps) => {
-  // Determine which code to use based on current file
-  const getCodeForFile = (filename: string) => {
-    switch (filename) {
-      case "add.py":
-        return ADD_PY_CODE;
-      case "hello.py":
-      default:
-        return HELLO_PY_CODE;
-    }
-  };
-
-  const [code, setCode] = useState(getCodeForFile(currentFile));
+  const [code, setCode] = useState("");
   const [output, setOutput] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isRunning, setIsRunning] = useState(false);
+  const [isLoadingFile, setIsLoadingFile] = useState(false);
   const [pyodide, setPyodide] = useState<{
     runPythonAsync: (code: string) => Promise<any>;
     runPython: (code: string) => any;
   } | null>(null);
 
-  // Update code when currentFile changes
+  // Function to load file content
+  const loadFileContent = useCallback(async (filename: string) => {
+    setIsLoadingFile(true);
+    try {
+      const response = await fetch(`/${filename}`);
+      if (response.ok) {
+        const content = await response.text();
+        setCode(content);
+      } else {
+        console.error(`Failed to load ${filename}`);
+        setCode(`# Error: Could not load ${filename}`);
+      }
+    } catch (error) {
+      console.error(`Error loading ${filename}:`, error);
+      setCode(`# Error: Could not load ${filename}`);
+    } finally {
+      setIsLoadingFile(false);
+    }
+  }, []);
+
+  // Load file content when currentFile changes
   useEffect(() => {
-    setCode(getCodeForFile(currentFile));
+    loadFileContent(currentFile);
     setOutput(""); // Clear output when switching files
-  }, [currentFile]);
+  }, [currentFile, loadFileContent]);
 
   // Load Pyodide on component mount
   useEffect(() => {
@@ -228,9 +184,9 @@ output  # Return the output
 
       {/* Code editor */}
       <div className="flex-1 overflow-hidden">
-        {isLoading ? (
+        {isLoading || isLoadingFile ? (
           <div className="loading-container h-full flex items-center justify-center">
-            Loading Python environment...
+            {isLoading ? "Loading Python environment..." : "Loading file..."}
           </div>
         ) : (
           <CodeMirror
