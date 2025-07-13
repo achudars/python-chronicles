@@ -80,10 +80,12 @@ export default function Home() {
               </p>
             </div>
 
-            <h3 className="text-xl font-bold mb-2 mt-6">Code Display</h3>
-            <p className="mb-4">
-              The code snippet is loaded and displayed in the editor on the right. You can modify the code and execute it to see the results.
-            </p>
+            <div className="bg-white rounded-lg p-5 shadow mt-6">
+              <h3 className="text-lg font-semibold mb-2">Code Display</h3>
+              <p className="text-gray-600">
+                The code snippet is loaded and displayed in the editor on the right. You can modify the code and execute it to see the results.
+              </p>
+            </div>
           </div>
 
           {/* Right side - Code editor */}
