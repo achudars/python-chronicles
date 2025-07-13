@@ -156,10 +156,18 @@
 
 .cm-editor .cm-scroller {
   background-color: var(--dark-panel) !important;
+  overflow: visible !important; /* Let parent handle scrolling */
+  scrollbar-width: none; /* Firefox */
 }
 
 .cm-editor .cm-content {
   background-color: var(--dark-panel) !important;
+  padding: 1rem !important;
+}
+
+/* Disable CodeMirror's built-in scrollbar since we're using custom */
+.cm-editor .cm-scroller::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
 
 .console-output-text {
@@ -232,4 +240,43 @@
 .output-console {
   background-color: var(--console-bg);
   border-color: var(--light-green);
+}
+
+/* Custom thin scrollbar for output console */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--medium-gray) var(--console-bg);
+}
+
+/* Webkit scrollbar styling for Chrome/Safari - vertical only */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 0px; /* Disable horizontal scrollbar */
+}
+
+.custom-scrollbar::-webkit-scrollbar:vertical {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar:horizontal {
+  height: 0px; /* Disable horizontal scrollbar */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--console-bg);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--medium-gray);
+  border-radius: 4px;
+  border: 1px solid var(--console-bg);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--light-gray);
+}
+
+.custom-scrollbar::-webkit-scrollbar-corner {
+  background: var(--console-bg);
 }

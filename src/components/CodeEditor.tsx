@@ -229,34 +229,36 @@ output  # Return the output
       </div>
 
       {/* Code editor */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden max-h-[500px]">
         {isLoading || isLoadingFile ? (
           <div className="loading-container h-full flex items-center justify-center">
             {isLoading ? "Loading Python environment..." : "Loading file..."}
           </div>
         ) : (
-          <CodeMirror
-            value={code}
-            height="100%"
-            readOnly={true}
-            extensions={[python()]}
-            theme="dark"
-            basicSetup={{
-              lineNumbers: true,
-              highlightActiveLineGutter: true,
-              highlightSpecialChars: true,
-              foldGutter: true,
-              drawSelection: true,
-              dropCursor: false,
-              indentOnInput: false,
-              syntaxHighlighting: true,
-            }}
-          />
+          <div className="custom-scrollbar overflow-y-auto overflow-x-hidden h-full">
+            <CodeMirror
+              value={code}
+              height="auto"
+              readOnly={true}
+              extensions={[python()]}
+              theme="dark"
+              basicSetup={{
+                lineNumbers: true,
+                highlightActiveLineGutter: true,
+                highlightSpecialChars: true,
+                foldGutter: true,
+                drawSelection: true,
+                dropCursor: false,
+                indentOnInput: false,
+                syntaxHighlighting: true,
+              }}
+            />
+          </div>
         )}
       </div>
 
       {/* Output console */}
-      <div className="output-console h-1/4 min-h-[100px] border-t p-3 font-mono overflow-y-auto console-bg">
+      <div className="output-console custom-scrollbar max-h-[300px] min-h-[100px] border-t p-3 font-mono overflow-y-auto overflow-x-hidden console-bg">
         <div className="flex items-center justify-between mb-2">
           <div className="text-xs console-output-text font-medium">Console Output</div>
           <div className="text-xs text-gray-300">
@@ -270,7 +272,7 @@ output  # Return the output
             })()}
           </div>
         </div>
-        <pre className="whitespace-pre-wrap text-sm text-white">
+        <pre className="whitespace-pre-wrap text-sm text-white break-words">
           {(() => {
             if (isLoading) return "Initializing Python environment...";
             if (isRunning) return "Running code...";
