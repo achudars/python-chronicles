@@ -186,33 +186,27 @@ const CodeEditor = ({ currentFile = "hello.py" }: CodeEditorProps) => {
 
   // Function to run the Python code
   const runCode = useCallback(async () => {
-    if (!pyodide || isRunning) return;
+    if (!pyodide || isRunning || !code.trim()) return;
 
     setIsRunning(true);
     setOutput("");
 
     try {
-      // This is a much simpler approach that works reliably
-      const result = await pyodide.runPythonAsync(`
+      // Execute the actual code content from the editor
+      // First, store the code in a Python variable using a safe approach
+      await pyodide.runPythonAsync(`
 import sys
 import io
 
 # Redirect stdout to capture print statements
 sys.stdout = io.StringIO()
+      `);
 
-# Run the code (a simplified version to avoid I/O operations)
-print("Hello from Python Chronicles!")
-print("Python is running in WebAssembly!")
+      // Execute the user's code directly using runPythonAsync
+      await pyodide.runPythonAsync(code);
 
-print("\\nLet's calculate some squares:")
-for i in range(1, 6):
-    print(f"{i} squared is {i**2}")
-
-languages = ["Python", "JavaScript", "WebAssembly"]
-print(f"\\nLanguages used in this project: {', '.join(languages)}")
-    
-print("\\nThis code is executed using Pyodide - Python in WebAssembly")
-
+      // Get the captured output
+      const result = await pyodide.runPythonAsync(`
 # Get the captured output
 output = sys.stdout.getvalue()
 output  # Return the output
@@ -227,7 +221,7 @@ output  # Return the output
     } finally {
       setIsRunning(false);
     }
-  }, [pyodide, isRunning]);
+  }, [pyodide, isRunning, code]);
 
   return (
     <div className="flex flex-col h-full">
