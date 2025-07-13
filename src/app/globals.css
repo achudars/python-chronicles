@@ -32,7 +32,7 @@
   
   /* Font variables */
   --font-sans: 'Noto Sans Devanagari', sans-serif, Helvetica, Arial;
-  --font-mono: var(--font-geist-mono);
+  --font-mono: 'Noto Sans Mono', monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -58,7 +58,7 @@ body {
 /* Add custom styles for the code editor */
 .cm-editor {
   height: 100% !important;
-  font-family: monospace !important;
+  font-family: var(--font-mono) !important;
 }
 
 .cm-scroller {
