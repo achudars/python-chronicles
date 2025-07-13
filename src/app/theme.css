@@ -193,6 +193,19 @@
   width: 60%;
 }
 
+/* Custom button styles for code editor */
+.button-orange-active {
+  background-color: var(--accent-orange);
+}
+
+.button-green-active {
+  background-color: var(--accent-green);
+}
+
+.button-hover-dark {
+  background-color: var(--dark-gray);
+}
+
 /* Animation for loading states */
 @keyframes pulse {
   0%, 100% { opacity: 1; }

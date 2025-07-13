@@ -14,8 +14,17 @@ export async function GET(
       return NextResponse.json({ error: 'Invalid filename' }, { status: 400 });
     }
 
-    // Construct path to the Python file
-    const filePath = path.join(process.cwd(), 'public', 'python', 'src', filename);
+    let filePath: string;
+    
+    // Check if this is a test file path (contains 'tests/')
+    if (filename.startsWith('tests/')) {
+      // Remove 'tests/' prefix and construct path to tests directory
+      const testFileName = filename.replace('tests/', '');
+      filePath = path.join(process.cwd(), 'public', 'python', 'tests', testFileName);
+    } else {
+      // Regular source file in src directory
+      filePath = path.join(process.cwd(), 'public', 'python', 'src', filename);
+    }
     
     // Read the file
     const content = await readFile(filePath, 'utf-8');

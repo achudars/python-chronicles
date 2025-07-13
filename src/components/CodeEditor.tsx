@@ -29,36 +29,54 @@ const CodeEditor = ({ currentFile = "hello.py" }: CodeEditorProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isRunning, setIsRunning] = useState(false);
   const [isLoadingFile, setIsLoadingFile] = useState(false);
+  const [viewMode, setViewMode] = useState<'source' | 'test'>('source');
   const [pyodide, setPyodide] = useState<{
     runPythonAsync: (code: string) => Promise<any>;
     runPython: (code: string) => any;
   } | null>(null);
 
+  // Function to get the appropriate filename based on view mode
+  const getFileName = useCallback((baseFile: string, mode: 'source' | 'test') => {
+    if (mode === 'test') {
+      const baseName = baseFile.replace('.py', '');
+      return `test_${baseName}.py`;
+    }
+    return baseFile;
+  }, []);
+
   // Function to load file content
-  const loadFileContent = useCallback(async (filename: string) => {
+  const loadFileContent = useCallback(async (filename: string, mode: 'source' | 'test') => {
     setIsLoadingFile(true);
+    const actualFileName = getFileName(filename, mode);
+    const apiPath = mode === 'test' ? `tests/${actualFileName}` : actualFileName;
+
     try {
-      const response = await fetch(`/api/python/${filename}`);
+      const response = await fetch(`/api/python/${apiPath}`);
       if (response.ok) {
         const content = await response.text();
         setCode(content);
       } else {
-        console.error(`Failed to load ${filename}`);
-        setCode(`# Error: Could not load ${filename}`);
+        console.error(`Failed to load ${actualFileName}`);
+        setCode(`# Error: Could not load ${actualFileName}`);
       }
     } catch (error) {
-      console.error(`Error loading ${filename}:`, error);
-      setCode(`# Error: Could not load ${filename}`);
+      console.error(`Error loading ${actualFileName}:`, error);
+      setCode(`# Error: Could not load ${actualFileName}`);
     } finally {
       setIsLoadingFile(false);
     }
-  }, []);
+  }, [getFileName]);
 
-  // Load file content when currentFile changes
+  // Reset to source view when currentFile changes
   useEffect(() => {
-    loadFileContent(currentFile);
+    setViewMode('source');
+  }, [currentFile]);
+
+  // Load file content when currentFile or viewMode changes
+  useEffect(() => {
+    loadFileContent(currentFile, viewMode);
     setOutput(""); // Clear output when switching files
-  }, [currentFile, loadFileContent]);
+  }, [currentFile, viewMode, loadFileContent]);
 
   // Load Pyodide on component mount
   useEffect(() => {
@@ -155,30 +173,58 @@ output  # Return the output
   return (
     <div className="flex flex-col h-full">
       {/* Code editor header */}
-      <div className="editor-header flex items-center justify-between p-3 border-b">
-        <div className="flex items-center">
-          <span className="text-sm font-medium text-white">{currentFile}</span>
-        </div>
-        <div className="flex items-center">
-          <span className="text-xs text-white opacity-70 mr-3">
-            {(() => {
-              if (isLoading) return "Loading...";
-              if (isRunning) return "Running...";
-              return "Run";
-            })()}
+      <div className="editor-header border-b">
+        {/* Filename row */}
+        <div className="px-3 pt-3 pb-2">
+          <span className="text-sm font-medium text-white">
+            {getFileName(currentFile, viewMode)}
           </span>
-          <button
-            onClick={runCode}
-            disabled={isLoading || isRunning || !pyodide}
-            className={`p-2 rounded-md run-button cursor-pointer ${isLoading || isRunning || !pyodide
-              ? 'run-button-disabled cursor-not-allowed'
-              : 'run-button-active'
-              }`}
-            aria-label="Run Python code"
-            title="Run Python code"
-          >
-            <PlayIcon />
-          </button>
+        </div>
+
+        {/* Controls row */}
+        <div className="flex items-center justify-between px-3 pb-3">
+          <div className="flex items-center gap-2">
+            {/* Toggle buttons for source/test view */}
+            <button
+              onClick={() => setViewMode('source')}
+              className={`px-4 py-2 rounded-lg text-sm font-normal cursor-pointer transition-colors text-white ${viewMode === 'source'
+                ? 'button-orange-active'
+                : 'hover:button-hover-dark'
+                }`}
+            >
+              Source
+            </button>
+            <button
+              onClick={() => setViewMode('test')}
+              className={`px-4 py-2 rounded-lg text-sm font-normal cursor-pointer transition-colors text-white ${viewMode === 'test'
+                ? 'button-green-active'
+                : 'hover:button-hover-dark'
+                }`}
+            >
+              Test
+            </button>
+          </div>
+          <div className="flex items-center">
+            <span className="text-sm text-white opacity-70 mr-3">
+              {(() => {
+                if (isLoading) return "Loading...";
+                if (isRunning) return "Running...";
+                return "Run";
+              })()}
+            </span>
+            <button
+              onClick={runCode}
+              disabled={isLoading || isRunning || !pyodide}
+              className={`px-4 py-2 rounded-lg run-button cursor-pointer ${isLoading || isRunning || !pyodide
+                ? 'run-button-disabled cursor-not-allowed'
+                : 'run-button-active'
+                }`}
+              aria-label="Run Python code"
+              title="Run Python code"
+            >
+              <PlayIcon />
+            </button>
+          </div>
         </div>
       </div>
 
