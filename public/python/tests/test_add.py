@@ -22,7 +22,7 @@ def test_add_numbers_function():
     assert add_numbers(-5, 10) == 5
     assert add_numbers(-3, -7) == -10
     
-    print("✓ add_numbers function tests passed!")
+    print("[OK] add_numbers function tests passed!")
 
 
 def test_sum_function():
@@ -39,7 +39,7 @@ def test_sum_function():
     # Test with single element
     assert sum([42]) == 42
     
-    print("✓ sum function tests passed!")
+    print("[OK] sum function tests passed!")
 
 
 def test_add_output():
@@ -80,11 +80,11 @@ def test_add_output():
     assert "Total sum: 38" in output
     assert "add_numbers(100, 250) = 350" in output
     
-    print("✓ add.py output tests passed!")
+    print("[OK] add.py output tests passed!")
 
 
 if __name__ == "__main__":
     test_add_numbers_function()
     test_sum_function()
     test_add_output()
-    print("\n🎉 All tests for add.py passed successfully!")
+    print("\n[SUCCESS] All tests for add.py passed successfully!")

@@ -36,7 +36,7 @@ def test_hello_output():
     assert "5 squared is 25" in output
     assert "Python, JavaScript, WebAssembly" in output
     
-    print("✓ All hello.py tests passed!")
+    print("[OK] All hello.py tests passed!")
 
 
 def test_square_calculation():
@@ -47,10 +47,10 @@ def test_square_calculation():
         result = num ** 2
         assert result == expected, f"Expected {num}^2 = {expected}, got {result}"
     
-    print("✓ Square calculation tests passed!")
+    print("[OK] Square calculation tests passed!")
 
 
 if __name__ == "__main__":
     test_hello_output()
     test_square_calculation()
-    print("\n🎉 All tests for hello.py passed successfully!")
+    print("\n[SUCCESS] All tests for hello.py passed successfully!")

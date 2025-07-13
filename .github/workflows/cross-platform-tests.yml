@@ -43,6 +43,9 @@ jobs:
 
       - name: Run Python tests (Windows)
         if: runner.os == 'Windows'
+        shell: cmd
+        env:
+          PYTHONIOENCODING: utf-8
         run: |
           cd public\python
           python tests\run_all_tests.py
@@ -68,19 +71,22 @@ jobs:
           test_sum_function()
           test_add_output()
 
-          print('✅ All individual module tests passed on ${{ matrix.os }}')
+          print('[PASS] All individual module tests passed on ${{ matrix.os }}')
           "
 
       - name: Test individual modules (Windows)
         if: runner.os == 'Windows'
+        shell: cmd
+        env:
+          PYTHONIOENCODING: utf-8
         run: |
           cd public\python
           echo "Testing individual Python modules..."
-          python -c "import sys, os; sys.path.insert(0, 'src'); sys.path.insert(0, 'tests'); from test_hello import test_hello_output, test_square_calculation; test_hello_output(); test_square_calculation(); from test_add import test_add_numbers_function, test_sum_function, test_add_output; test_add_numbers_function(); test_sum_function(); test_add_output(); print('✅ All individual module tests passed on ${{ matrix.os }}')"
+          python -c "import sys, os; sys.path.insert(0, 'src'); sys.path.insert(0, 'tests'); from test_hello import test_hello_output, test_square_calculation; test_hello_output(); test_square_calculation(); from test_add import test_add_numbers_function, test_sum_function, test_add_output; test_add_numbers_function(); test_sum_function(); test_add_output(); print('[PASS] All individual module tests passed on ${{ matrix.os }}')"
 
       - name: Platform summary
         run: |
-          echo "🎉 Tests completed successfully!"
-          echo "✅ Platform: ${{ matrix.os }}"
-          echo "✅ Python: 3.12"
-          echo "🚀 All Python Chronicles tests passed!"
+          echo "[SUCCESS] Tests completed successfully!"
+          echo "[PASS] Platform: ${{ matrix.os }}"
+          echo "[PASS] Python: 3.12"
+          echo "[COMPLETE] All Python Chronicles tests passed!"
