@@ -236,7 +236,7 @@ output  # Return the output
           <CodeMirror
             value={code}
             height="100%"
-            onChange={setCode}
+            readOnly={true}
             extensions={[python()]}
             theme="dark"
             basicSetup={{
@@ -245,8 +245,8 @@ output  # Return the output
               highlightSpecialChars: true,
               foldGutter: true,
               drawSelection: true,
-              dropCursor: true,
-              indentOnInput: true,
+              dropCursor: false,
+              indentOnInput: false,
               syntaxHighlighting: true,
             }}
           />
