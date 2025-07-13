@@ -38,7 +38,7 @@ const CodeEditor = ({ currentFile = "hello.py" }: CodeEditorProps) => {
   const loadFileContent = useCallback(async (filename: string) => {
     setIsLoadingFile(true);
     try {
-      const response = await fetch(`/${filename}`);
+      const response = await fetch(`/api/python/${filename}`);
       if (response.ok) {
         const content = await response.text();
         setCode(content);
