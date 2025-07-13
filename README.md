@@ -5,6 +5,8 @@
 
 Run Python code directly in your browser using WebAssembly.
 
+![Python Chronicles Preview](python-chronicles.png)
+
 ## Features
 
 - Execute Python code in the browser using Pyodide (WebAssembly)
