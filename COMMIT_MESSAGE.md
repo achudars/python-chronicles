@@ -8,8 +8,8 @@ Updated GitHub Actions workflows and documentation to use only Python 3.12 (late
 
 ### GitHub Actions Workflows
 
-- ✅ `python-tests.yml` - Updated to use Python 3.12 only (removed 3.9, 3.10, 3.11)
-- ✅ `ci-cd.yml` - Simplified to Python 3.12 only (removed 3.11)
+- ✅ `python-tests.yml` - Updated to use Python 3.12 only
+- ✅ `ci-cd.yml` - Simplified to Python 3.12 only
 - ✅ `cross-platform-tests.yml` - Updated to Python 3.12 across all platforms
 - ✅ `security-checks.yml` - Already using Python 3.12 (no changes needed)
 
