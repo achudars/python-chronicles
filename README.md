@@ -3,7 +3,6 @@
 [![Python Tests](https://github.com/achudars/python-chronicles/actions/workflows/python-tests.yml/badge.svg)](https://github.com/achudars/python-chronicles/actions/workflows/python-tests.yml)
 [![CI/CD Pipeline](https://github.com/achudars/python-chronicles/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/achudars/python-chronicles/actions/workflows/ci-cd.yml)
 [![Cross-Platform Tests](https://github.com/achudars/python-chronicles/actions/workflows/cross-platform-tests.yml/badge.svg)](https://github.com/achudars/python-chronicles/actions/workflows/cross-platform-tests.yml)
-[![Security & Dependency Checks](https://github.com/achudars/python-chronicles/actions/workflows/security-checks.yml/badge.svg)](https://github.com/achudars/python-chronicles/actions/workflows/security-checks.yml)
 
 Run Python code directly in your browser using WebAssembly.
 
