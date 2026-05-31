@@ -2,60 +2,58 @@
 @import "./theme.css";
 
 :root {
-  /* New color palette based on the dashboard image */
-  --dark-green: #124734;
-  --medium-green: #1b5e45;
-  --light-green: #246e52;
-  --accent-green: #35a77c;
-  --accent-orange: #ff855a;
-  --white: #ffffff;
-  --off-white: #f8f9fa;
-  --light-gray: #e9ecef;
-  --medium-gray: #ced4da;
-  --dark-gray: #495057;
-  --code-bg: #2d2d2d;
-  --dark-panel: #3a3f47;
-  --console-bg: #2c313a;
-  
-  /* Base theme colors */
-  --background: var(--dark-green);
-  --sidebar-bg: var(--medium-green);
-  --foreground: var(--white);
-  --header-bg: var(--medium-green);
-  --header-text: var(--white);
-  --editor-bg: var(--dark-panel);
-  --editor-text: var(--white);
-  --button-primary: var(--accent-green);
-  --button-hover: var(--accent-orange);
-  --button-disabled: var(--medium-gray);
-  --border-color: var(--light-green);
-  
+  /* Surfaces */
+  --bg-base: #0a0a0b;
+  --bg-surface: #111113;
+  --bg-card: #18181b;
+  --bg-elevated: #222226;
+
+  /* Borders */
+  --border: rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(255, 255, 255, 0.13);
+
+  /* Text */
+  --text-primary: #efefef;
+  --text-secondary: #7a7a87;
+  --text-tertiary: #3e3e4a;
+
+  /* Accent — Python green */
+  --accent: #22c55e;
+  --accent-dim: rgba(34, 197, 94, 0.13);
+  --accent-hover: #16a34a;
+
+  /* Warm accent — run / action */
+  --accent-warm: #f97316;
+  --accent-warm-dim: rgba(249, 115, 22, 0.13);
+  --accent-warm-hover: #ea6c0a;
+
+  /* Code surfaces */
+  --code-bg: #0d0d0f;
+  --console-bg: #0a0a0c;
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  /* Layout */
+  --sidebar-width: 216px;
+
   /* Font variables */
   --font-sans: 'Noto Sans Devanagari', sans-serif, Helvetica, Arial;
   --font-mono: 'Noto Sans Mono', monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: var(--brown-medium);
-    --foreground: white;
-    --header-bg: var(--teal-dark);
-    --editor-bg: var(--brown-dark);
-  }
-}
-
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: 'Noto Sans Devanagari', sans-serif, Helvetica, Arial;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
 }
 
-/* Specific class for Noto Sans font */
 .font-noto {
   font-family: 'Noto Sans Devanagari', sans-serif, Helvetica, Arial;
 }
 
-/* Add custom styles for the code editor */
 .cm-editor {
   height: 100% !important;
   font-family: var(--font-mono) !important;

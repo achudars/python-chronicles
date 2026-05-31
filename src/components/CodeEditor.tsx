@@ -240,19 +240,13 @@ output  # Return the output
             {/* Toggle buttons for source/test view */}
             <button
               onClick={() => setViewMode('source')}
-              className={`px-4 py-2 rounded-lg text-sm font-normal cursor-pointer transition-colors text-white ${viewMode === 'source'
-                ? 'button-orange-active'
-                : 'hover:button-hover-dark'
-                }`}
+              className={`editor-toggle-btn ${viewMode === 'source' ? 'editor-toggle-active-warm' : ''}`}
             >
               Source
             </button>
             <button
               onClick={() => setViewMode('test')}
-              className={`px-4 py-2 rounded-lg text-sm font-normal cursor-pointer transition-colors text-white ${viewMode === 'test'
-                ? 'button-green-active'
-                : 'hover:button-hover-dark'
-                }`}
+              className={`editor-toggle-btn ${viewMode === 'test' ? 'editor-toggle-active-cool' : ''}`}
             >
               Test
             </button>
@@ -286,7 +280,7 @@ output  # Return the output
         {isLoading || isLoadingFile ? (
           <div className="loading-container h-full flex flex-col items-center justify-center">
             <div className="text-center">
-              <div className="inline-block w-8 h-8 border-4 border-blue-400 border-t-transparent rounded-full animate-spin mb-3"></div>
+              <div className="editor-spinner"></div>
               <div className="text-sm">
                 {isLoading ? output || "Loading Python environment..." : "Loading file..."}
               </div>
@@ -341,7 +335,7 @@ output  # Return the output
           <div className="mt-3 pt-3 border-t border-gray-600">
             <button
               onClick={retryLoadPyodide}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors"
+              className="retry-btn"
             >
               Retry Loading Python
             </button>
